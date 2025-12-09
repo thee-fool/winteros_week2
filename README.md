@@ -23,7 +23,8 @@ Once it's installed we can try it with the following command:
 gz sim shapes.sdf
 ```
 If everything works well you should see the following screen:
-![alt text][image1]
+![image1](https://github.com/user-attachments/assets/251b28ee-61f5-4a17-9a48-b11d3a4c906a)
+
 
 After Gazebo successfully starts we can install the Gazebo ROS integration with the following command:
 ```bash
@@ -36,7 +37,8 @@ You can find the official install guide [here](https://gazebosim.org/docs/harmon
 ## Run Gazebo examples
 
 Let's start again the `gz sim shapes.sdf` example again and let's see what is important on the Gazebo GUI:
-![alt text][image2]
+![image2](https://github.com/user-attachments/assets/3bc6cd6b-c142-4005-8539-560713510174)
+
 
 1. Blue - Start and pause the simulation. By default Gazebo starts the simulation paused but if you add the `-r` when you start Gazebo it automatically starts the simulation.
 2. Red - You can add basic shapes or lights here and you can move and rotate them.
@@ -53,14 +55,17 @@ After download unzip it and place it in the home folder of your user.
 
 To let Gazebo know about the offline model library we have to set the `GZ_SIM_RESOURCE_PATH` environmental variable, the best is to add it to the `.bashrc`:
 1. Open `.bashrc` with this command `codium ~/.bashrc` . 
-2. Paste the command below, save it and source it by `source ~/.bashrc` . 
+2. Paste the command below, save it and source it by `source ~/.bashrc` .
+![image3](https://github.com/user-attachments/assets/3f19a57e-c866-4fca-bcaf-7a0abb3b8937)
 ```bash
 export GZ_SIM_RESOURCE_PATH=~/gazebo_models
 ```
 
 After setting up the offline model library let's open the `empty.sdf` in Gazebo and add a few models through the `Resource Spawner` within the `plug-in browser`(mentioned above):
 You won't be able to see the Resource Spawner in Docker, close the World and entity tree by right clicking on it.
-![alt text][image3]
+![image4](https://github.com/user-attachments/assets/1da77157-f99e-4867-8f73-772014cef59f)
+
+
 
 You can also save the world go to the burger menu on the top left `save world`, name it as new_world.sdf.
 
@@ -110,7 +115,10 @@ gz sim world.sdf
 ```
 
 And it should open the example world I created for this package.
-![alt text][image5]
+![image5](https://github.com/user-attachments/assets/5ce83586-269d-44f7-a5fb-e6bf54b83505)
+
+
+
 
 Now let's switch to the empty template:
 ```bash
@@ -118,7 +126,7 @@ gz sim empty.sdf
 ```
 
 Build a world you like using the resource spawner and in the end save it into the worlds folder with `sdf` extension.
-![alt text][image6]
+![image6](https://github.com/user-attachments/assets/c317f382-f6fc-4cd8-be6a-7323df60b840)
 
 ## Launch Gazebo world from ROS
 
@@ -210,7 +218,8 @@ First of all let's create our robot's URDF in the `urdf` folder with `dume_bot.u
 Now we only have the very first link of our robot without any mechanical, collision or visual properties, there is nothing to see yet.
 
 Let's add a fix joint and the next link - `base_link` - that will be the body of our robot. It's a 40x20x10cm brick with 15kg, the inertia matrix is calculated from these parameters.
-![alt text][image6]
+![image7](https://github.com/user-attachments/assets/79f039c5-71a1-41ab-b812-97c438af9021)
+
 
 It's always very important to set realistic values into the inertia matrix, at least the order of magnitude should be in the right range. If the inertia matrix is set to a very unrealistic value it will cause unwanted effects during the physical simulation.
 
@@ -264,7 +273,8 @@ We always have to think and verify the values if we use `xacro`, during these le
 Now we have a robot body that we can visualize. ROS provides several powerful tools to visualize various data, we already met `rqt` now we meet `RViz`.
 
 We can start it with the `rviz2` command. Then we can add (1) the `Robot Model` view (2), we browse for our URDF file (3) and we type `base_link` as Fixed Frame (4).
-![alt text][image7]
+![image8](https://github.com/user-attachments/assets/82c86bf0-27c3-48a6-9195-87c91fd647eb)
+
 
 Although is possible to use RViz like this, it's not the most convinient way. Later, when we add more links and joints we'll have the problem that the we don't have any program running that informs RViz about the right transformation among these links (if the joint isn't fixed).
 
@@ -337,7 +347,8 @@ From now, in every lesson we'll create this launch file, because it's extremely 
 ros2 launch erc_gazebo_basics check_urdf.launch.py 
 ```
 
-![alt text][image9]
+
+![image9](https://github.com/user-attachments/assets/0dc69962-9a84-4f46-b975-56320020498a)
 
 
 
@@ -425,7 +436,8 @@ Rebuild the workspace and let's see it using rviz:
 ros2 launch bme_gazebo_basics check_urdf.launch.py 
 ```
 
-![alt text][image9]
+![image10](https://github.com/user-attachments/assets/3d6a0fe6-7a73-4661-b47e-c36ce94d1676)
+
 
 Before we can move forward there is still a problem we have to fix first, the robot needs a caster wheel in the front and another in the back. 
 > NOTE: This time these aren't separate links and joints but we add it within the `base_link`:
@@ -461,7 +473,8 @@ Before we can move forward there is still a problem we have to fix first, the ro
 ```
 
 After rebuild, let's see it in RViz.
-![alt text][image10]
+![image11](https://github.com/user-attachments/assets/f85bd4b1-f21c-4627-a05d-ebe7770de555)
+
 
 ## TF Tree
 
@@ -485,7 +498,8 @@ ros2 run rqt_tf_tree rqt_tf_tree
 > ros2 run rqt_tf_tree rqt_tf_tree --force-discover
 > ```
 
-![alt text][image11]
+![image12](https://github.com/user-attachments/assets/33d08f5d-9224-4931-9da5-c1dc64f4f5b7)
+
 
 ## Add some colors
 
@@ -633,7 +647,8 @@ ros2 launch erc_gazebo_basics spawn_robot.launch.py
 
 Right now, nothing publishes odometry for our robot so let's change the fixed frame to the `robot_footprint` in RViz.
 
-![alt text][image13]
+![image14](https://github.com/user-attachments/assets/88cec1c2-1a8e-4eff-b9aa-663403ff7bb6)
+
 
 We see that doesn't matter how we change the wheel joint angles it has no impact on the physical simulation. We did the first step, the robot is spawned into a Gazebo simulation, but the integration just starts from here.
 
@@ -647,11 +662,13 @@ Typical differential drive robots are hoverboards, robot vacuum cleaners and rob
 
 We'll use [the following Gazebo plugin](https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1DiffDrive.html) to drive our robots. The kinematics of the differential robot is very simple, the radius from the center of curvature is `R`, the rate of rotation is `ω` and the wheel speeds are `Vl` and `Vr`. The distance between the wheels is `l`. 
 
-![alt text][image14]
+![image15 (2)](https://github.com/user-attachments/assets/063149ba-b29b-451e-bebc-33bf7ed3c39c)
+
 
 We can describe the kinematics of the differential drive robot [with the following equations](https://www.cs.columbia.edu/~allen/F17/NOTES/icckinematics.pdf):
 
-![alt text][image15]
+![image16 (2)](https://github.com/user-attachments/assets/14bb6f0a-89c1-45fb-afca-92bb1a472982)
+
 
 There are 3 special cases of the above equations:
 
@@ -727,7 +744,8 @@ ros2 launch bme_gazebo_basics spawn_robot.launch.py
 
 We see that odometry is still not published for RViz, but at least in Gazebo we can already drive our robot with the `teleop` plugin:
 
-![alt text][image16]
+![image17](https://github.com/user-attachments/assets/2f5e8c95-7277-46e2-82ba-ba421fa9987e)
+
 
 We can try to drive the robot from ROS with the `teleop_twist_keyboard` node:
 >This will not work for now but keep this method for now 
@@ -805,8 +823,9 @@ And in another terminal let's start the `teleop_twist_keyboard`:
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard 
 ```
+![image18 (2)](https://github.com/user-attachments/assets/ea05674f-563e-4df3-8cc2-fbed72a71d7c)
 
-![alt text][image17]
+
 
 The friction between the wheels and the ground plane can be unrealistic so we can adjust it inside our URDF, let's add the following physical simulation parameters to the end of our URDF before the `</robot>` tag is closed:
 
@@ -841,7 +860,8 @@ The friction between the wheels and the ground plane can be unrealistic so we ca
 
 If we use the `rqt_tf_tree` tool that we met earlier, we can see an additional transformation between the `robot_footprint` and the `odom` frame:
 
-![alt text][image19]
+![image18](https://github.com/user-attachments/assets/e3c0f67d-693d-4b7b-b57d-0c517aa188ac)
+
 
 I created a node that helps visualizing the odometry and the trajectory of the robot. Clone the following repo into your workspace:
 go to src and clone this repo 
@@ -985,11 +1005,13 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
 And let's see how it looks like in RViz:
-![alt text][image18]
+![image20](https://github.com/user-attachments/assets/73aa2666-a892-4526-b9c6-5c84d75db825)
+
 
 We can also see how the nodes are connected to each other using the tool we previously met, `rqt_graph`:
 
-![alt text][image19]
+![image21](https://github.com/user-attachments/assets/8438dfed-d917-47ea-8377-d4a9f65a0dee)
+
 
 
 # 3D models
@@ -1020,7 +1042,8 @@ and for both left and right wheels:
 
 > Note that also `<material>` tag is removed, if we don't remove it, Gazebo will still apply a single color on the model!
 
-![alt text][image20]
+![image22](https://github.com/user-attachments/assets/143593f7-7ff1-418a-84d8-076c039ce567)
+
 
 # Skid steer
 
@@ -1345,8 +1368,9 @@ Rebuild the workspace, and we can launch with the same launch file, just overrid
 ```bash
 ros2 launch erc_gazebo_basics spawn_robot.launch.py model:=dume_bot_skid_steer.urdf
 ```
+![image23](https://github.com/user-attachments/assets/53438241-812b-4fb2-8419-b2b452afbea5)
 
-![alt text][image21]
+
 
 
 
