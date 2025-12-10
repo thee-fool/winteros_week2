@@ -355,20 +355,37 @@ ros2 launch erc_gazebo_basics check_urdf.launch.py
 
 ## Building our robot 2
 
-Let's keep building the differential drive robot by adding the 2 wheels:
+### How to add color
+
+By default everything is rendered in red color in RViz because we were not defining the colors of the links. Let's color the body of our robot orange and the wheels green. To color a link we have to put a `<material>` tag into the `<visual>` tag of each links.
+
+We can use the following tags:
+```xml
+<material name="orange"/>
+<material name="green"/>
+```
+
+By default RViz won't be able to understand these color names though, to define these colors we can include the `materials.xacro` that is already in the package of this lesson. Add the following import to the very beginning of the URDF within the `<robot>` tag:
+```xml
+  <!-- STEP 3 - RViz colors -->
+  <xacro:include filename="$(find erc_gazebo_basics)/urdf/materials.xacro" />
+```
+
+### Wheel
+Let's keep building the differential drive robot by adding the 4 wheels:(color is already added in the wheel)
 
 ```xml
-  <!-- STEP 3 - Wheels -->
-  <joint type="continuous" name="left_wheel_joint">
-    <origin xyz="0 0.15 0" rpy="0 0 0"/>
-    <child link="left_wheel"/>
+<!-- STEP 4 - Wheels -->
+  <joint type="continuous" name="front_left_wheel_joint">
+    <origin xyz="0.15 0.15 0" rpy="0 0 0"/>
+    <child link="front_left_wheel"/>
     <parent link="base_link"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="100" velocity="10"/>
     <dynamics damping="1.0" friction="1.0"/>
   </joint>
 
-  <link name='left_wheel'>
+  <link name='front_left_wheel'>
     <inertial>
       <mass value="5.0"/>
       <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
@@ -386,24 +403,25 @@ Let's keep building the differential drive robot by adding the 2 wheels:
       </geometry>
     </collision>
 
-    <visual name='left_wheel_visual'>
+    <visual name='front_left_wheel_visual'>
       <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
       <geometry>
         <cylinder radius=".1" length=".05"/>
       </geometry>
+      <material name="green"/>
     </visual>
   </link>
 
-  <joint type="continuous" name="right_wheel_joint">
-    <origin xyz="0 -0.15 0" rpy="0 0 0"/>
-    <child link="right_wheel"/>
+  <joint type="continuous" name="rear_left_wheel_joint">
+    <origin xyz="-0.15 0.15 0" rpy="0 0 0"/>
+    <child link="rear_left_wheel"/>
     <parent link="base_link"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="100" velocity="10"/>
     <dynamics damping="1.0" friction="1.0"/>
   </joint>
 
-  <link name='right_wheel'>
+  <link name='rear_left_wheel'>
     <inertial>
       <mass value="5.0"/>
       <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
@@ -421,11 +439,84 @@ Let's keep building the differential drive robot by adding the 2 wheels:
       </geometry>
     </collision>
 
-    <visual name='right_wheel_visual'>
+    <visual name='rear_left_wheel_visual'>
       <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
       <geometry>
         <cylinder radius=".1" length=".05"/>
       </geometry>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint type="continuous" name="front_right_wheel_joint">
+    <origin xyz="0.15 -0.15 0" rpy="0 0 0"/>
+    <child link="front_right_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="10"/>
+    <dynamics damping="1.0" friction="1.0"/>
+  </joint>
+
+  <link name='front_right_wheel'>
+    <inertial>
+      <mass value="5.0"/>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <inertia
+          ixx="0.014" ixy="0" ixz="0"
+          iyy="0.014" iyz="0"
+          izz="0.025"
+      />
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
+      <geometry>
+        <cylinder radius=".1" length=".05"/>
+      </geometry>
+    </collision>
+
+    <visual name='front_right_wheel_visual'>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius=".1" length=".05"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint type="continuous" name="rear_right_wheel_joint">
+    <origin xyz="-0.15 -0.15 0" rpy="0 0 0"/>
+    <child link="rear_right_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="100" velocity="10"/>
+    <dynamics damping="1.0" friction="1.0"/>
+  </joint>
+
+  <link name='rear_right_wheel'>
+    <inertial>
+      <mass value="5.0"/>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <inertia
+          ixx="0.014" ixy="0" ixz="0"
+          iyy="0.014" iyz="0"
+          izz="0.025"
+      />
+    </inertial>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
+      <geometry>
+        <cylinder radius=".1" length=".05"/>
+      </geometry>
+    </collision>
+
+    <visual name='rear_right_wheel_visual'>
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius=".1" length=".05"/>
+      </geometry>
+      <material name="green"/>
     </visual>
   </link>
 ```
@@ -433,47 +524,14 @@ Let's keep building the differential drive robot by adding the 2 wheels:
 Rebuild the workspace and let's see it using rviz:
 
 ```bash
-ros2 launch bme_gazebo_basics check_urdf.launch.py 
+ros2 launch erc_gazebo_basics check_urdf.launch.py 
 ```
 
-![image10](https://github.com/user-attachments/assets/3d6a0fe6-7a73-4661-b47e-c36ce94d1676)
+![image10](https://github.com/user-attachments/assets/36dde29b-636f-4516-adb4-c1e22677c518)
 
 
-Before we can move forward there is still a problem we have to fix first, the robot needs a caster wheel in the front and another in the back. 
-> NOTE: This time these aren't separate links and joints but we add it within the `base_link`:
 
-```xml
-    <collision name='rear_caster_collision'>
-      <origin xyz="-0.15 0 -0.05" rpy=" 0 0 0"/>
-      <geometry>
-        <sphere radius="0.0499"/>
-      </geometry>
-    </collision>
 
-    <visual name='rear_caster_visual'>
-      <origin xyz="-0.15 0 -0.05" rpy=" 0 0 0"/>
-      <geometry>
-        <sphere radius="0.05"/>
-      </geometry>
-    </visual>
-
-    <collision name='front_caster_collision'>
-      <origin xyz="0.15 0 -0.05" rpy=" 0 0 0"/>
-      <geometry>
-        <sphere radius="0.0499"/>
-      </geometry>
-    </collision>
-
-    <visual name='front_caster_visual'>
-      <origin xyz="0.15 0 -0.05" rpy=" 0 0 0"/>
-      <geometry>
-        <sphere radius="0.05"/>
-      </geometry>
-    </visual>
-```
-
-After rebuild, let's see it in RViz.
-![image11](https://github.com/user-attachments/assets/f85bd4b1-f21c-4627-a05d-ebe7770de555)
 
 
 ## TF Tree
@@ -485,7 +543,7 @@ sudo apt install ros-jazzy-rqt-tf-tree
 
 After that, let's view our robot with the previous command in RViz:
 ```bash
-ros2 launch bme_gazebo_basics check_urdf.launch.py
+ros2 launch erc_gazebo_basics check_urdf.launch.py
 ```
 
 and in another terminal let's run TF Tree:
@@ -498,27 +556,12 @@ ros2 run rqt_tf_tree rqt_tf_tree
 > ros2 run rqt_tf_tree rqt_tf_tree --force-discover
 > ```
 
-![image12](https://github.com/user-attachments/assets/33d08f5d-9224-4931-9da5-c1dc64f4f5b7)
+
+![image12](https://github.com/user-attachments/assets/f7b5b7b0-78d1-4a18-bfac-afb23e940357)
 
 
-## Add some colors
 
-By default everything is rendered in red color in RViz because we were not defining the colors of the links. Let's color the body of our robot orange and the wheels green. To color a link we have to put a `<material>` tag into the `<visual>` tag of each links.
 
-We can use the following tags:
-```xml
-<material name="orange"/>
-<material name="green"/>
-```
-
-By default RViz won't be able to understand these color names though, to define these colors we can include the `materials.xacro` that is already in the package of this lesson. Add the following import to the very beginning of the URDF within the `<robot>` tag:
-```xml
-  <!-- STEP 4 - RViz colors -->
-  <xacro:include filename="$(find erc_gazebo_basics)/urdf/materials.xacro" />
-```
-
-Rebuild the workspace and let's see it in RViz:
-![alt text][image12]
 
 ## Load the URDF in Gazebo
 
@@ -647,7 +690,8 @@ ros2 launch erc_gazebo_basics spawn_robot.launch.py
 
 Right now, nothing publishes odometry for our robot so let's change the fixed frame to the `robot_footprint` in RViz.
 
-![image14](https://github.com/user-attachments/assets/88cec1c2-1a8e-4eff-b9aa-663403ff7bb6)
+
+![image14](https://github.com/user-attachments/assets/fc98318f-fa65-461f-ad86-53ad197fe3c4)
 
 
 We see that doesn't matter how we change the wheel joint angles it has no impact on the physical simulation. We did the first step, the robot is spawned into a Gazebo simulation, but the integration just starts from here.
@@ -690,15 +734,17 @@ Let's create a `dume_bot.gazebo` file in the URDF folder:
         <topic>/cmd_vel</topic>
 
         <!-- Wheel joints -->
-        <left_joint>left_wheel_joint</left_joint>
-        <right_joint>right_wheel_joint</right_joint>
+        <left_joint>front_left_wheel_joint</left_joint>
+        <left_joint>rear_left_wheel_joint</left_joint>
+        <right_joint>front_right_wheel_joint</right_joint>
+        <right_joint>rear_right_wheel_joint</right_joint>
 
         <!-- Wheel parameters -->
         <wheel_separation>0.3</wheel_separation>
-        <wheel_radius>0.1</wheel_radius>
+        <wheel_radius>0.1</wheel_radius> 
 
         <!-- Control gains and limits (optional) -->
-        <max_velocity>3.0</max_velocity>
+        <max_velocity>3.0</max_velocity> 
         <max_linear_acceleration>1</max_linear_acceleration>
         <min_linear_acceleration>-1</min_linear_acceleration>
         <max_angular_acceleration>2</max_angular_acceleration>
@@ -709,7 +755,7 @@ Let's create a `dume_bot.gazebo` file in the URDF folder:
         <min_angular_velocity>-1</min_angular_velocity>
         
         <!-- Other parameters (optional) -->
-        <odom_topic>odom</odom_topic>
+        <odom_topic>odom</odom_topic> 
         <tf_topic>tf</tf_topic>
         <frame_id>odom</frame_id>
         <child_frame_id>base_footprint</child_frame_id>
@@ -719,9 +765,11 @@ Let's create a `dume_bot.gazebo` file in the URDF folder:
     <plugin
         filename="gz-sim-joint-state-publisher-system"
         name="gz::sim::systems::JointStatePublisher">
-        <topic>joint_states</topic>
-        <joint_name>left_wheel_joint</joint_name>
-        <joint_name>right_wheel_joint</joint_name>
+        <topic>joint_states</topic> <!--from <ros><remapping> -->
+        <joint_name>front_left_wheel_joint</joint_name>
+        <joint_name>front_right_wheel_joint</joint_name>
+        <joint_name>rear_left_wheel_joint</joint_name>
+        <joint_name>rear_right_wheel_joint</joint_name>
     </plugin>
   </gazebo>
 </robot>
@@ -739,24 +787,12 @@ Let's include this new file in our robot's URDF. In the same way how we included
 Rebuild the workspace and let's try it:
 
 ```bash
-ros2 launch bme_gazebo_basics spawn_robot.launch.py 
+ros2 launch erc_gazebo_basics spawn_robot.launch.py 
 ```
 
 We see that odometry is still not published for RViz, but at least in Gazebo we can already drive our robot with the `teleop` plugin:
+![image17](https://github.com/user-attachments/assets/dac88c0a-4104-4b5a-b337-311ae56fc769)
 
-![image17](https://github.com/user-attachments/assets/2f5e8c95-7277-46e2-82ba-ba421fa9987e)
-
-
-We can try to drive the robot from ROS with the `teleop_twist_keyboard` node:
->This will not work for now but keep this method for now 
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard 
-```
-
-> If `teleop_twist_keyboard` is not installed yet, you can install it with the following command:
-> ```bash
-> sudo apt install ros-jazzy-teleop-twist-keyboard
-> ```
 
 
 But - just like the odometry - this message is also not forwarded between ROS and Gazebo.
@@ -820,33 +856,63 @@ ros2 launch erc_gazebo_basics spawn_robot.launch.py
 
 And in another terminal let's start the `teleop_twist_keyboard`:
 
+We can try to drive the robot from ROS with the `teleop_twist_keyboard` node:
+
 ```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard 
 ```
-![image18 (2)](https://github.com/user-attachments/assets/ea05674f-563e-4df3-8cc2-fbed72a71d7c)
 
+> If `teleop_twist_keyboard` is not installed yet, you can install it with the following command:
+> ```bash
+> sudo apt install ros-jazzy-teleop-twist-keyboard
+> ```
+
+
+You will be able to run the bot through the terminal
 
 
 The friction between the wheels and the ground plane can be unrealistic so we can adjust it inside our URDF, let's add the following physical simulation parameters to the end of our URDF before the `</robot>` tag is closed:
 
 ```xml
-  <!-- STEP 6 - Gazebo frictions and colors -->
-  <gazebo reference="left_wheel">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <minDepth>0.0001</minDepth>
-    <maxVel>1.0</maxVel>
+   <!-- STEP 6 - Gazebo frictions  -->
+  <gazebo reference="front_left_wheel">
+    <mu1>1.5</mu1>
+    <mu2>0.7</mu2>
+    <kp>200000.0</kp>
+    <kd>5000.0</kd>
+    <minDepth>0.002</minDepth>
+    <maxVel>0.3</maxVel>
+    <fdir1>0 1 0</fdir1>
   </gazebo>
 
-  <gazebo reference="right_wheel">
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <minDepth>0.0001</minDepth>
-    <maxVel>1.0</maxVel>
+  <gazebo reference="front_right_wheel">
+    <mu1>1.5</mu1>
+    <mu2>0.7</mu2>
+    <kp>200000.0</kp>
+    <kd>5000.0</kd>
+    <minDepth>0.002</minDepth>
+    <maxVel>0.3</maxVel>
+    <fdir1>0 1 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="rear_left_wheel">
+    <mu1>1.5</mu1>
+    <mu2>0.7</mu2>
+    <kp>200000.0</kp>
+    <kd>5000.0</kd>
+    <minDepth>0.002</minDepth>
+    <maxVel>0.3</maxVel>
+    <fdir1>0 1 0</fdir1>
+  </gazebo>
+
+  <gazebo reference="rear_right_wheel">
+    <mu1>1.5</mu1>
+    <mu2>0.7</mu2>
+    <kp>200000.0</kp>
+    <kd>5000.0</kd>
+    <minDepth>0.002</minDepth>
+    <maxVel>0.3</maxVel>
+    <fdir1>0 1 0</fdir1>
   </gazebo>
 
   <gazebo reference="base_link">
@@ -854,13 +920,14 @@ The friction between the wheels and the ground plane can be unrealistic so we ca
     <mu2>0.000002</mu2>
   </gazebo>
 ```
+Built the package and source the workspace, run the robot launch file and teleop in the terminals
 
 
 ## Odometry and Trajectory server
 
 If we use the `rqt_tf_tree` tool that we met earlier, we can see an additional transformation between the `robot_footprint` and the `odom` frame:
 
-![image18](https://github.com/user-attachments/assets/e3c0f67d-693d-4b7b-b57d-0c517aa188ac)
+![image19](https://github.com/user-attachments/assets/4e491176-09f1-47d4-9baa-b5181898d454)
 
 
 I created a node that helps visualizing the odometry and the trajectory of the robot. Clone the following repo into your workspace:
@@ -873,6 +940,7 @@ Rebuild you worksapce and also source the environment since we added a new packa
 
 Then add the node to the `spawn_robot.launch.py`:
 
+
 ```python
     trajectory_node = Node(
         package='mogi_trajectory_server',
@@ -881,11 +949,13 @@ Then add the node to the `spawn_robot.launch.py`:
     )
 ```
 
+
 And also add it to the `LaunchDescription()` object:
 
 ```python
     launchDescriptionObject.add_action(trajectory_node)
 ```
+>This package provides a node that saves trajectory data using a TransformListener between `reference_frame_id` and `robot_frame_id`, the trajectory is saved internally as a `nav_msgs/Path` and can be obtained through the `trajectory_topic` topic.
 
 >There is some problem with the mogi_trajectory_server it uses bitbots_tf_buffer which does not work as expected therefore we will stick with the goated method which uses tf2_ros, navigate to the `src/mogi_trajectory_server/mogi_trajectory_server/trajectory.py` and replace the whole code with
 ```python
@@ -1005,7 +1075,8 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 ```
 
 And let's see how it looks like in RViz:
-![image20](https://github.com/user-attachments/assets/73aa2666-a892-4526-b9c6-5c84d75db825)
+
+![image20](https://github.com/user-attachments/assets/2cc6c9a9-a308-4429-a566-a74bbf7ef7d4)
 
 
 We can also see how the nodes are connected to each other using the tool we previously met, `rqt_graph`:
@@ -1025,350 +1096,51 @@ Creating a model consists of the following recomennded steps:
 3. Iteratively rescale and move the model in Blender, always export to the same `.dae` file, when everything is in the right place, color the model in Blender as you wish.
 
 
-The collada meshes are already available for this robot, so it's time to replace cylinders in the URDF file:
-
-and for both left and right wheels:
+The collada meshes are already available for this robot, so it's time to replace the box and cylinders in the URDF file:
 
 ```xml
-    <visual name='left_wheel_visual'>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <geometry>
-        <mesh filename = "package://erc_gazebo_basics/meshes/wheel.dae"/>
-        <!-- <cylinder radius=".1" length=".05"/> -->
-      </geometry>
-      <!-- <material name="green"/> -->
-    </visual>
-```
-
-> Note that also `<material>` tag is removed, if we don't remove it, Gazebo will still apply a single color on the model!
-
-![image22](https://github.com/user-attachments/assets/143593f7-7ff1-418a-84d8-076c039ce567)
-
-
-# Skid steer
-
-To simulate a 4 wheeled skid steer drive first we'll have to extend our robot with 2 more wheels and we remove the caster wheels. To drive the robot we can use the same diff drive plugin, as it's described [in its documentation](https://gazebosim.org/api/sim/8/classgz_1_1sim_1_1systems_1_1DiffDrive.html), left and right joint can appear multiple times:
-```xml
-<left_joint>: Name of a joint that controls a left wheel. This element can appear multiple times, and must appear at least once.
-```
-
-Let's create a `dume_bot_skid_steer.urdf` file first in the `urdf` folder:
-
-```xml
-<?xml version='1.0'?>
-
-<robot name="dume_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
-
-  <!-- STEP 5 - Gazebo plugin -->
-  <xacro:include filename="$(find erc_gazebo_basics)/urdf/dume_bot_skid_steer.gazebo" />
-
-  <!-- STEP 4 - RViz colors -->
-  <xacro:include filename="$(find erc_gazebo_basics)/urdf/materials.xacro" />
-
-  <!-- STEP 1 - Robot footprint -->
-  <link name="base_footprint"></link>
-
-  <!-- STEP 2 - Robot chassis = base_link -->
-  <joint name="base_footprint_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="base_footprint"/>
-    <child link="base_link" />
-  </joint>
-
-  <link name='base_link'>
-    <pose>0 0 0.1 0 0 0</pose>
-
-    <inertial>
-      <mass value="15.0"/>
-      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
-      <inertia
-          ixx="0.0625" ixy="0" ixz="0"
-          iyy="0.2125" iyz="0"
-          izz="0.25"
-      />
-    </inertial>
-
-    <collision name='collision'>
-      <origin xyz="0 0 0" rpy=" 0 0 0"/> 
-      <geometry>
-        <box size=".4 .2 .1"/>
-      </geometry>
-    </collision>
-
     <visual name='base_link_visual'>
       <origin xyz="0 0 0" rpy=" 0 0 0"/>
       <geometry>
-        <box size=".4 .2 .1"/>
+        <mesh filename = "package://erc_gazebo_basics/meshes/IronMan_ROS_Body.dae"/>
+        <!-- <box size=".4 .2 .1"/> -->
       </geometry>
-      <material name="orange"/>
+      <!-- <material name="orange"/> -->
     </visual>
+```
+Similarly do for wheels:
 
-  </link>
+For left front and right rear wheel: 
+```xml
+<mesh filename = "package://erc_gazebo_basics/meshes/IronManWheelLeftFront.dae"/>
+```
+and for right front and left rear wheel:
+```xml
+<mesh filename = "package://erc_gazebo_basics/meshes/IronManWheelRightFront.dae"/>
+```
 
-  <!-- STEP 3 - Wheels -->
-  <joint type="continuous" name="front_left_wheel_joint">
-    <origin xyz="0.15 0.15 0" rpy="0 0 0"/>
-    <child link="front_left_wheel"/>
-    <parent link="base_link"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>
-    <limit effort="100" velocity="10"/>
-    <dynamics damping="1.0" friction="1.0"/>
-  </joint>
-
-  <link name='front_left_wheel'>
-    <inertial>
-      <mass value="5.0"/>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <inertia
-          ixx="0.014" ixy="0" ixz="0"
-          iyy="0.014" iyz="0"
-          izz="0.025"
-      />
-    </inertial>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
-      <geometry>
-        <cylinder radius=".1" length=".05"/>
-      </geometry>
-    </collision>
-
+ex: 
+```xml
     <visual name='front_left_wheel_visual'>
       <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
       <geometry>
         <!-- <cylinder radius=".1" length=".05"/> -->
-        <mesh filename = "package://erc_gazebo_basics/meshes/wheel.dae"/>
+        <mesh filename = "package://erc_gazebo_basics/meshes/IronManWheelLeftFront.dae"/>
       </geometry>
       <!-- <material name="green"/> -->
     </visual>
   </link>
-
-  <joint type="continuous" name="rear_left_wheel_joint">
-    <origin xyz="-0.15 0.15 0" rpy="0 0 0"/>
-    <child link="rear_left_wheel"/>
-    <parent link="base_link"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>
-    <limit effort="100" velocity="10"/>
-    <dynamics damping="1.0" friction="1.0"/>
-  </joint>
-
-  <link name='rear_left_wheel'>
-    <inertial>
-      <mass value="5.0"/>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <inertia
-          ixx="0.014" ixy="0" ixz="0"
-          iyy="0.014" iyz="0"
-          izz="0.025"
-      />
-    </inertial>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
-      <geometry>
-        <cylinder radius=".1" length=".05"/>
-      </geometry>
-    </collision>
-
-    <visual name='rear_left_wheel_visual'>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <geometry>
-        <!-- <cylinder radius=".1" length=".05"/> -->
-        <mesh filename = "package://erc_gazebo_basics/meshes/wheel.dae"/>
-      </geometry>
-      <!-- <material name="green"/> -->
-    </visual>
-  </link>
-
-  <joint type="continuous" name="front_right_wheel_joint">
-    <origin xyz="0.15 -0.15 0" rpy="0 0 0"/>
-    <child link="front_right_wheel"/>
-    <parent link="base_link"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>
-    <limit effort="100" velocity="10"/>
-    <dynamics damping="1.0" friction="1.0"/>
-  </joint>
-
-  <link name='front_right_wheel'>
-    <inertial>
-      <mass value="5.0"/>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <inertia
-          ixx="0.014" ixy="0" ixz="0"
-          iyy="0.014" iyz="0"
-          izz="0.025"
-      />
-    </inertial>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
-      <geometry>
-        <cylinder radius=".1" length=".05"/>
-      </geometry>
-    </collision>
-
-    <visual name='front_right_wheel_visual'>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <geometry>
-        <!-- <cylinder radius=".1" length=".05"/> -->
-        <mesh filename = "package://erc_gazebo_basics/meshes/wheel.dae"/>
-      </geometry>
-      <!-- <material name="green"/> -->
-    </visual>
-  </link>
-
-  <joint type="continuous" name="rear_right_wheel_joint">
-    <origin xyz="-0.15 -0.15 0" rpy="0 0 0"/>
-    <child link="rear_right_wheel"/>
-    <parent link="base_link"/>
-    <axis xyz="0 1 0" rpy="0 0 0"/>
-    <limit effort="100" velocity="10"/>
-    <dynamics damping="1.0" friction="1.0"/>
-  </joint>
-
-  <link name='rear_right_wheel'>
-    <inertial>
-      <mass value="5.0"/>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <inertia
-          ixx="0.014" ixy="0" ixz="0"
-          iyy="0.014" iyz="0"
-          izz="0.025"
-      />
-    </inertial>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/> 
-      <geometry>
-        <cylinder radius=".1" length=".05"/>
-      </geometry>
-    </collision>
-
-    <visual name='rear_right_wheel_visual'>
-      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
-      <geometry>
-        <!-- <cylinder radius=".1" length=".05"/> -->
-        <mesh filename = "package://erc_gazebo_basics/meshes/wheel.dae"/>
-      </geometry>
-      <!-- <material name="green"/> -->
-    </visual>
-  </link>
-
-  <!-- STEP 6 - Gazebo frictions and colors -->
-  <gazebo reference="front_left_wheel">
-    <mu1>1.5</mu1>
-    <mu2>0.7</mu2>
-    <kp>200000.0</kp>
-    <kd>5000.0</kd>
-    <minDepth>0.002</minDepth>
-    <maxVel>0.3</maxVel>
-    <fdir1>0 1 0</fdir1>
-    <!-- <material>Gazebo/Green</material> -->
-  </gazebo>
-
-  <gazebo reference="front_right_wheel">
-    <mu1>1.5</mu1>
-    <mu2>0.7</mu2>
-    <kp>200000.0</kp>
-    <kd>5000.0</kd>
-    <minDepth>0.002</minDepth>
-    <maxVel>0.3</maxVel>
-    <fdir1>0 1 0</fdir1>
-    <!-- <material>Gazebo/Green</material> -->
-  </gazebo>
-
-  <gazebo reference="rear_left_wheel">
-    <mu1>1.5</mu1>
-    <mu2>0.7</mu2>
-    <kp>200000.0</kp>
-    <kd>5000.0</kd>
-    <minDepth>0.002</minDepth>
-    <maxVel>0.3</maxVel>
-    <fdir1>0 1 0</fdir1>
-    <!-- <material>Gazebo/Green</material> -->
-  </gazebo>
-
-  <gazebo reference="rear_right_wheel">
-    <mu1>1.5</mu1>
-    <mu2>0.7</mu2>
-    <kp>200000.0</kp>
-    <kd>5000.0</kd>
-    <minDepth>0.002</minDepth>
-    <maxVel>0.3</maxVel>
-    <fdir1>0 1 0</fdir1>
-    <!-- <material>Gazebo/Green</material> -->
-  </gazebo>
-
-  <gazebo reference="base_link">
-    <mu1>0.000002</mu1>
-    <mu2>0.000002</mu2>
-    <!-- <material>Gazebo/Red</material> -->
-  </gazebo>
-
-</robot>
 ```
 
-This time we include `dume_bot_skid_steer.gazebo`, let's create this file too:
 
-```xml
-<?xml version="1.0"?>
-<robot>
-  <gazebo>
-    <plugin
-        filename="gz-sim-diff-drive-system"
-        name="gz::sim::systems::DiffDrive">
-        <!-- Topic for the command input -->
-        <topic>/cmd_vel</topic>
 
-        <!-- Wheel joints -->
-        <left_joint>front_left_wheel_joint</left_joint>
-        <left_joint>rear_left_wheel_joint</left_joint>
-        <right_joint>front_right_wheel_joint</right_joint>
-        <right_joint>rear_right_wheel_joint</right_joint>
+> Note that also `<material>` tag is removed, if we don't remove it, Gazebo will still apply a single color on the model!
+> 
+![image22](https://github.com/user-attachments/assets/fe7f1bce-afc5-48e0-bf31-61ef3acb550f)
 
-        <!-- Wheel parameters -->
-        <wheel_separation>0.3</wheel_separation>
-        <wheel_radius>0.1</wheel_radius> 
 
-        <!-- Control gains and limits (optional) -->
-        <max_velocity>3.0</max_velocity> 
-        <max_linear_acceleration>1</max_linear_acceleration>
-        <min_linear_acceleration>-1</min_linear_acceleration>
-        <max_angular_acceleration>2</max_angular_acceleration>
-        <min_angular_acceleration>-2</min_angular_acceleration>
-        <max_linear_velocity>0.5</max_linear_velocity>
-        <min_linear_velocity>-0.5</min_linear_velocity>
-        <max_angular_velocity>1</max_angular_velocity>
-        <min_angular_velocity>-1</min_angular_velocity>
-        
-        <!-- Other parameters (optional) -->
-        <odom_topic>odom</odom_topic> 
-        <tf_topic>tf</tf_topic>
-        <frame_id>odom</frame_id>
-        <child_frame_id>base_footprint</child_frame_id>
-        <odom_publish_frequency>30</odom_publish_frequency>
-    </plugin>
 
-    <plugin
-        filename="gz-sim-joint-state-publisher-system"
-        name="gz::sim::systems::JointStatePublisher">
-        <topic>joint_states</topic> <!--from <ros><remapping> -->
-        <joint_name>front_left_wheel_joint</joint_name>
-        <joint_name>front_right_wheel_joint</joint_name>
-        <joint_name>rear_left_wheel_joint</joint_name>
-        <joint_name>rear_right_wheel_joint</joint_name>
-    </plugin>
-  </gazebo>
-</robot>
-```
 
-It's almost identical to the previous diff drive setup but this time we define 4 wheels for both plugins.
-
-Rebuild the workspace, and we can launch with the same launch file, just overriding the model argument:
-```bash
-ros2 launch erc_gazebo_basics spawn_robot.launch.py model:=dume_bot_skid_steer.urdf
-```
-![image23](https://github.com/user-attachments/assets/53438241-812b-4fb2-8419-b2b452afbea5)
 
 
 
