@@ -1138,7 +1138,6 @@ ex:
 
 
 ![image22](https://github.com/user-attachments/assets/fe7f1bce-afc5-48e0-bf31-61ef3acb550f)
-![Recording 2025-12-10 191215](https://github.com/user-attachments/assets/3c7aad64-d473-4ffe-a662-1b0ab60a0c1c)
 
 
 
