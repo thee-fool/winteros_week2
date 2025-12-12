@@ -1,3 +1,23 @@
+# Table of Contents
+1. [What is Gazebo](#what-is-gazebo)
+1.1. [Run Gazebo examples](#run-gazebo-examples)  
+2. [Download ROS package](#download-ros-package)  
+3. [Creating a Gazebo world](#creating-a-gazebo-world)  
+3.1. [Launch Gazebo world from ROS](#launch-gazebo-world-from-ros)  
+4. [URDF](#urdf)  
+4.1. [Building our robot 1](#building-our-robot-1)  
+4.2. [View the robot in RViz](#view-the-robot-in-rviz)  
+4.3. [Building our robot 2](#building-our-robot-2)  
+4.4. [TF Tree](#tf-tree)   
+4.6. [Load the URDF in Gazebo](#load-the-urdf-in-gazebo)  
+5. [Gazebo integration](#gazebo-integration)  
+5.1. [Diff drive plugin](#diff-drive-plugin)  
+5.2. [ROS gz bridge](#ros-gz-bridge)  
+5.3. [Driving around](#driving-around)  
+5.4. [Odometry and Trajectory server](#odometry-and-trajectory-server)  
+6. [3D models](#3d-models)  
+
+
 # What is Gazebo
 Gazebo is a powerful robotics simulation tool that provides a 3D environment for simulating robots, sensors, and objects. It is widely used in the ROS ecosystem for testing and developing robotics algorithms in a realistic virtual environment before deploying them to real hardware.
 
@@ -203,7 +223,7 @@ For more detailed tutorials you can check out the official documentation [here](
 ## Building our robot 1
 
 
->Making a bot is not compulsory, You skip this directly skip to the [Load the URDF in Gazebo](#load-the-urdf-in-gazebo) part.
+>This part is not compulsory, add this file to urdf folder [dume_bot.urdf](https://drive.google.com/file/d/1Qt583ONvU4sfDFmD9CbT9lwTHsVVvBzI/view?usp=sharing) and jump to [Load the URDF in Gazebo](#load-the-urdf-in-gazebo) part.
 
 
 First of all let's create our robot's URDF in the `urdf` folder with `dume_bot.urdf` name. To start from the bare minimum let's add the following xml code to the file.
