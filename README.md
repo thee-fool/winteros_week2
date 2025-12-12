@@ -202,6 +202,10 @@ For more detailed tutorials you can check out the official documentation [here](
 
 ## Building our robot 1
 
+
+>Making a bot is not compulsory, You skip this directly skip to the [Load the URDF in Gazebo](#load-the-urdf-in-gazebo) part.
+
+
 First of all let's create our robot's URDF in the `urdf` folder with `dume_bot.urdf` name. To start from the bare minimum let's add the following xml code to the file.
 
 ```xml
