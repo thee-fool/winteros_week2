@@ -1,6 +1,6 @@
 # Table of Contents
 1. [What is Gazebo](#what-is-gazebo)
-   1.1. [Run Gazebo examples](#run-gazebo-examples)  
+ 1.1. [Run Gazebo examples](#run-gazebo-examples)  
 3. [Download ROS package](#download-ros-package)  
 4. [Creating a Gazebo world](#creating-a-gazebo-world)  
 3.1. [Launch Gazebo world from ROS](#launch-gazebo-world-from-ros)  
